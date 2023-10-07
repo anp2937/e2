@@ -11,12 +11,20 @@
     <div class="row">
         <div class="column">
             <div class="player">
-                <?php echo $_SESSION["playerCards"] ?>
+                <?php 
+                    if (isset($_SESSION["playerCards"])) {
+                        echo $_SESSION["playerCards"];
+                    }
+                ?>
             </div>
         </div>
         <div class="column">
             <div class="dealer">
-            <?php echo $_SESSION["dealerCards"] ?>
+                <?php 
+                    if (isset($_SESSION["dealerCards"])) {
+                        echo $_SESSION["dealerCards"];
+                    }
+                ?>
             </div>
         </div>
     </div>

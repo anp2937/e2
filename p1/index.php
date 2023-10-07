@@ -1,4 +1,8 @@
 <?php
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    $_SESSION["playerCards"] = '';
+    $_SESSION["dealerCards"] = '';
+}
 
 // Start the session
 if (session_status() === PHP_SESSION_NONE) {
