@@ -137,7 +137,7 @@ function renderCard($card) {
     return "<img src='img/cards/{$card}' alt=''>";
 }
 
-//get list of cards from img/cards directory
+// get list of cards from img/cards directory
 // https://code.google.com/archive/p/vector-playing-cards/downloads
 function getAllCards() {
     

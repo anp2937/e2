@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BlackJack GAME</title>
+    <title>Blackjack GAME</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main>
-    <h1>BlackJack GAME</h1>
+    <h1>Blackjack GAME</h1>
     <div class="alert" style="opacity: <?php echo $notificationMessage ? 1:0;?>">
         <?= $notificationMessage;?>
     </div>
