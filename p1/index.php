@@ -1,53 +1,133 @@
 <?php
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    $_SESSION["playerCards"] = '';
-    $_SESSION["dealerCards"] = '';
-}
 
 // Start the session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// set default button status to active
+$class = "";
 
-// function to render players current conbination of cusrd on the deck
+if(array_key_exists('start', $_POST)) {
+
+    $playerCards = [];
+    $dealerCards = [];
+
+    $_SESSION["cards"] = getAllCards();
+    $_SESSION["playerCards"] = [];
+    $_SESSION["dealerCards"] = [];
+    $_SESSION['player'] = 0;
+    $_SESSION['dealer'] = 0;
+
+    // init player deck
+    playerDeck($playerCards, $_SESSION["cards"]);
+    //init dealer deck
+    dealerDeck($_SESSION["cards"]);
+}
+
+if(array_key_exists('hit', $_POST)) {
+    if (isset($_SESSION["cards"])){
+        hit($_SESSION["cards"], $class);
+    } else {
+        echo "Game not started. Click START to start the game";
+    }
+}
+
+if(array_key_exists('stay', $_POST)) {
+    //add more cards untill condition met
+    if (isset($_SESSION["cards"])){
+        while ($_SESSION['dealer'] <= 17) {
+            $newCard = getOneCard($_SESSION["cards"]);
+            array_push ($_SESSION['dealerCards'], $newCard);
+            $_SESSION['dealer'] += cardValue($newCard);
+        } 
+        if ($_SESSION['dealer'] > 21 || $_SESSION['dealer'] < $_SESSION['player']) {
+            echo "You win";
+            $class = "disabled";
+        }
+        elseif ($_SESSION['dealer'] <=21 && $_SESSION['dealer'] > $_SESSION['player']) {
+            echo "Dealer Wins";
+            $class = "disabled";
+        }
+        elseif ($_SESSION['dealer'] == $_SESSION['player']) {
+            echo "Draw";
+            $class = "disabled";
+        }
+    } else {
+        echo "Game not started. Click START to start the game";
+    }
+}
+
+// function to render players current conbination of cards on the deck
 function playerDeck($playerCards, &$cards) {
 
     if(!$playerCards){
-        $playerCards .= getOneCard($cards);
+        array_push($playerCards, getOneCard($cards));
     }
-    $playerCards .= getOneCard($cards);
+    array_push($playerCards, getOneCard($cards));
 
-    if(!$_SESSION['playerCards']){
-        $_SESSION['playerCards'] = $playerCards;
-    } else {
-        $_SESSION['playerCards'] .= $playerCards;
+    foreach($playerCards as $card){
+        array_push($_SESSION['playerCards'], $card);
+        $_SESSION['player'] += cardValue($card);
     }
-
+}
+//transform array of Player cards stored in session into string to render on page.
+// input parameter is $SESSION['playerDeck']
+function renderPlayerDeck($cards) {
+    $playerDeck = '';
+    foreach($cards as $card) {
+        $playerDeck .= renderCard($card);
+    }
+    return $playerDeck;
 }
 
-// function to render dealer current conbination of cusrd on the deck
-function dealerDeck($dealerCards, &$cards) {
-
-    //if this is begining of the game - add the first one 
-    if (!$dealerCards){
-        $dealerCards = '<img src="img/card_back.png" alt="">';
-    }
-
-    $dealerCards .= getOneCard($cards);
-
-    $_SESSION["dealerCards"] .= $dealerCards;
+//return number (card value)
+function cardValue($card) {
+    $value = strtok($card, '_');
+    switch ($value) {
+        case "ace":
+          return 11;
+        case "jack":
+          return 10;
+        case "queen":
+            return 10;
+        case "king":
+            return 10;    
+        default:
+          return intval($value);
+      }
 }
 
+// function to collect dealer current combination of cards and store to session
+function dealerDeck(&$cards) {
+    $_SESSION["dealerCards"] = [];
+
+    $card = getOneCard($cards);
+    array_push($_SESSION["dealerCards"],$card);
+    // count first card
+    $_SESSION['dealer'] = cardValue($card);
+}
+
+// return string of dealer card combination.
+function renderDealerDeck($cards) {
+    $dealerDeck = '';
+    foreach($cards as $card){
+        $dealerDeck .= renderCard($card);
+    }
+    return $dealerDeck;
+}
 
 //get top card from the cards stack
 function getOneCard(&$cards) {
 
     $randCardName = array_pop($cards);
-    $card = "<img src='img/cards/{$randCardName}' alt=''>";
-    return $card;
+    return $randCardName;
 }
 
+//convert cart to html image
+function renderCard($card) {
+    return "<img src='img/cards/{$card}' alt=''>";
+}
 
 //get list of cards from img/cards directory
 // https://code.google.com/archive/p/vector-playing-cards/downloads
@@ -61,47 +141,20 @@ function getAllCards() {
     return $cards;
 }
 
-
-function hit (&$cards, $playerDeck) {
+function hit (&$cards, &$class) {
     $newCardName = getOneCard($cards);
-    $_SESSION['playerCards'] .= $newCardName;
+    array_push($_SESSION['playerCards'], $newCardName);
+
+    // add function that will check card value and add it to the Total
+    $_SESSION['player'] += cardValue($newCardName);
+        // check that Total <= 21 and save it to $SESSION['total'].
+    if ($_SESSION['player'] > 21) {
+        echo "Busted";
+        $class = "disabled";
+    } elseif($_SESSION['player'] == 21) {
+        echo "BlackJack!";
+        $class = "disabled";
+    }
 }
-
-// playerDeck($playerCards, $_SESSION["cards"]);
-// dealerDeck($dealerCards, $_SESSION["cards"]);
-// hit($_SESSION["cards"], $_SESSION["playerCards"]);
-
-if(array_key_exists('start', $_POST)) {
-
-    $playerCards = '';
-    $dealerCards = '';
-
-    $_SESSION["cards"] = getAllCards();
-    $_SESSION["playerCards"] = '';
-    $_SESSION["dealerCards"] = '';
-
-    // init player deck
-    playerDeck($playerCards, $_SESSION["cards"]);
-    //init dealer deck
-    dealerDeck($dealerCards, $_SESSION["cards"]);
-}
-
-if(array_key_exists('hit', $_POST)) {
-    hit($_SESSION["cards"], $_SESSION["playerCards"]);
-}
-
-if(array_key_exists('stay', $_POST)) {
-    $newCardName = getOneCard($_SESSION["cards"]);
-    $_SESSION['dealerCards'] .= $newCardName;
-}
-
-if(array_key_exists('reset', $_POST)) {
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_destroy();
-        $_SESSION["playerCards"] = '';
-        $_SESSION["dealerCards"] = '';
-     }
-}
-
 
 include 'index-view.php';
