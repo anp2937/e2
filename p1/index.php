@@ -5,11 +5,16 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// set default button status to active
+// set default button visibility status to active
 $class = "";
+// declare notification message variable
+$notificationMessage = "";
 
+// start the game is Start button was clicked
 if(array_key_exists('start', $_POST)) {
 
+    // reset all variables and SESSION
+    session_unset();
     $playerCards = [];
     $dealerCards = [];
 
@@ -25,14 +30,16 @@ if(array_key_exists('start', $_POST)) {
     dealerDeck($_SESSION["cards"]);
 }
 
+// add card to Players deck if HIT button was clicked
 if(array_key_exists('hit', $_POST)) {
     if (isset($_SESSION["cards"])){
-        hit($_SESSION["cards"], $class);
+        hit($_SESSION["cards"], $class, $notificationMessage);
     } else {
-        echo "Game not started. Click START to start the game";
+        $notificationMessage = "Game not started. Click START to start the game";
     }
 }
 
+// add cards to dealer untill the score total equal or more that 17
 if(array_key_exists('stay', $_POST)) {
     //add more cards untill condition met
     if (isset($_SESSION["cards"])){
@@ -42,19 +49,19 @@ if(array_key_exists('stay', $_POST)) {
             $_SESSION['dealer'] += cardValue($newCard);
         } 
         if ($_SESSION['dealer'] > 21 || $_SESSION['dealer'] < $_SESSION['player']) {
-            echo "You win";
+            $notificationMessage = "You win";
             $class = "disabled";
         }
         elseif ($_SESSION['dealer'] <=21 && $_SESSION['dealer'] > $_SESSION['player']) {
-            echo "Dealer Wins";
+            $notificationMessage = "Dealer Wins";
             $class = "disabled";
         }
         elseif ($_SESSION['dealer'] == $_SESSION['player']) {
-            echo "Draw";
+            $notificationMessage = "Draw";
             $class = "disabled";
         }
     } else {
-        echo "Game not started. Click START to start the game";
+        $notificationMessage = "Game not started. Click START to start the game";
     }
 }
 
@@ -71,6 +78,7 @@ function playerDeck($playerCards, &$cards) {
         $_SESSION['player'] += cardValue($card);
     }
 }
+
 //transform array of Player cards stored in session into string to render on page.
 // input parameter is $SESSION['playerDeck']
 function renderPlayerDeck($cards) {
@@ -141,7 +149,7 @@ function getAllCards() {
     return $cards;
 }
 
-function hit (&$cards, &$class) {
+function hit (&$cards, &$class, &$notificationMessage) {
     $newCardName = getOneCard($cards);
     array_push($_SESSION['playerCards'], $newCardName);
 
@@ -149,10 +157,10 @@ function hit (&$cards, &$class) {
     $_SESSION['player'] += cardValue($newCardName);
         // check that Total <= 21 and save it to $SESSION['total'].
     if ($_SESSION['player'] > 21) {
-        echo "Busted";
+        $notificationMessage = "Busted";
         $class = "disabled";
     } elseif($_SESSION['player'] == 21) {
-        echo "BlackJack!";
+        $notificationMessage = "BlackJack!";
         $class = "disabled";
     }
 }

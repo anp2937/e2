@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Black Jack GAME</title>
+    <title>BlackJack GAME</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main>
-    <h1>Black Jack GAME</h1>
+    <h1>BlackJack GAME</h1>
+    <div class="alert" style="opacity: <?php echo $notificationMessage ? 1:0;?>">
+        <?= $notificationMessage;?>
+    </div>
     <div class="row">
         <div class="column">
             <div class="player">
@@ -15,7 +18,6 @@
                     if (isset($_SESSION["playerCards"])) {
                         echo renderPlayerDeck($_SESSION["playerCards"]);
                     }
-
                 ?>
             </div>
         </div>
