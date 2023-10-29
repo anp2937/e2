@@ -27,6 +27,9 @@ $player = $_SESSION['player'];
 // get coordinates
 $cell = $_GET['cell'];
 
+//pass reload trigger back to index.php
+$restart = $_GET['restart'];
+
 list($row, $col) = explode('.', $cell);
 
 // if cell was empty - assign X or O and switch the turn
@@ -62,6 +65,7 @@ foreach(winningCombinations as $combination) {
 
 echo ($row);
 $_SESSION['board'] = $board;
+$_SESSION['restart'] = $restart;
 
 
 // clean all session data

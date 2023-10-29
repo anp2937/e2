@@ -78,7 +78,9 @@ for ($i = 0; $i < 3; $i++) {
         ($_SESSION['win'][0] ? 'disabled' : '') .
         '>' .
         $board[$i][$j] .
-        '</button></td>';
+        '</button>
+        <input type="hidden" name="restart" value="'.$restart.'">
+        </td>';
     }
     echo '</tr>';
 }

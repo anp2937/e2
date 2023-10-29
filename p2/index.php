@@ -2,11 +2,20 @@
 
 session_start();
 
+
+// game reload
+$restart = '';
+if(!isset($_SESSION['restart'])) {
+    session_unset();
+} else {
+    $restart = $_SESSION['restart'];
+    $_SESSION['restart'] = null;
+}
+
 // set win condition to false by default
 if(!isset($_SESSION['win'])) {
     $_SESSION['win'][0] = false;
 }
-
 
 // if this is new game - $board should be an empty array.
 if(!isset($_SESSION['board'])) {
