@@ -7,7 +7,7 @@
     <style>
         h1 {
             text-align: center;
-            margin-bottom: 100px;
+            margin-bottom: 50px;
         }
         table {
             border-collapse: collapse;
@@ -56,11 +56,25 @@
             margin-top: 100px;
             text-align: center;
         }
+        .frame {
+            margin: 0 auto;
+            margin-bottom: 50px;
+            border: 2px solid #000;
+            padding: 20px;
+            width: 40%;
+        }
     </style>
 </head>
 <body>
 <h1>Tic-Tac-Toe Game</h1>
-
+<fieldset class="frame">
+        <legend>Game Rules</legend>
+        <p>
+            - The game is played on a grid that's 3 squares by 3 squares.<br>
+            - You are X, your friend is O. Players take turns putting their marks in empty squares.<br>
+            - The first player to get 3 of her marks in a row (up, down, across, or diagonally) is the winner.<br>
+        </p>
+    </fieldset>
 <?php
 // Display win message:
 if($win) {
