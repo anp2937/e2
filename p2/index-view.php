@@ -60,7 +60,7 @@
 
 <?php
 // win message:
-if($_SESSION['win'][0] == 'true') {
+if($_SESSION['win'][0]) {
     echo '<div class="message">'.$_SESSION['win'][1]." - WINs".'</div>';
     echo '</br>';
     echo '</br>';
@@ -69,12 +69,16 @@ if($_SESSION['win'][0] == 'true') {
 }
 
 // Display game board
-echo '<form method="get" action="process.php">';
+echo '<form method="GET" action="process.php">';
 echo '<table>';
 for ($i = 0; $i < 3; $i++) {
     echo '<tr>';
     for ($j = 0; $j < 3; $j++) {
-        echo '<td><button type="submit" name="cell" value="' . $i .'.'. $j . '">' . $board[$i][$j] . '</button></td>';
+        echo '<td><button type="submit" name="cell" value="' . $i .'.'. $j . '" ' .
+        ($_SESSION['win'][0] ? 'disabled' : '') .
+        '>' .
+        $board[$i][$j] .
+        '</button></td>';
     }
     echo '</tr>';
 }

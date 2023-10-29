@@ -55,7 +55,7 @@ foreach(winningCombinations as $combination) {
     if($oneArray[$combination[0]] == $oneArray[$combination[1]] 
     && $oneArray[$combination[1]] == $oneArray[$combination[2]]
     && $oneArray[$combination[0]] != ' ') {
-        $_SESSION['win'] = ['true', $player];
+        $_SESSION['win'] = [true, $player];
     }
 }
 

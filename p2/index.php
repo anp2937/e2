@@ -3,8 +3,8 @@
 session_start();
 
 // set win condition to false by default
-if(!isset($_SESSION['win'])){
-    $_SESSION['win'][0] = 'false';
+if(!isset($_SESSION['win'])) {
+    $_SESSION['win'][0] = false;
 }
 
 
@@ -15,7 +15,7 @@ if(!isset($_SESSION['board'])) {
         [' ', ' ', ' '],
         [' ', ' ', ' '],
     ];
-    // if game is in progress then take array with data from SESSION
+// if game is in progress then take array with data from SESSION
 } else {
     $board = $_SESSION['board'];
 }
