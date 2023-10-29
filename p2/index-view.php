@@ -40,6 +40,9 @@
         button.clean {
             width: 10%;
             height: 5%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
         .message {
             background-color: #4CAF50;
@@ -59,32 +62,39 @@
 <h1>Tic-Tac-Toe Game</h1>
 
 <?php
-// win message:
-if($_SESSION['win'][0]) {
-    echo '<div class="message">'.$_SESSION['win'][1]." - WINs".'</div>';
+// Display win message:
+if($win) {
+    echo '<div class="message">'.$winner." - WINs".'</div>';
     echo '</br>';
     echo '</br>';
-    echo '<form method="POST" action="process.php">';
-    echo '<button type="submit" class="clean" name="clean" value="clean">Restart</button>';
 }
 
 // Display game board
-echo '<form method="GET" action="process.php">';
+echo '<form method="POST" action="process.php">';
 echo '<table>';
 for ($i = 0; $i < 3; $i++) {
     echo '<tr>';
     for ($j = 0; $j < 3; $j++) {
         echo '<td><button type="submit" name="cell" value="' . $i .'.'. $j . '" ' .
-        ($_SESSION['win'][0] ? 'disabled' : '') .
+        ($win ? 'disabled' : '') .
         '>' .
         $board[$i][$j] .
-        '</button>
-        <input type="hidden" name="restart" value="'.$restart.'">
-        </td>';
+        '</button></td>';
     }
     echo '</tr>';
 }
 echo '</table>';
+// not sure why we cannot just pass json string  to url parameters without "urlencode" ?
+// however, without urlencode I always receive NULL when checking $POST['board']
+// finally I googled this solution and it works
+echo '<input type="hidden" name="board" value="'.urlencode(json_encode($board)).'">';
+echo '<input type="hidden" name="player" value="'.$player.'">';
+echo '</br>';
+echo '</br>';
+if($win) {
+    echo '<form method="POST" action="process.php">';
+    echo '<button type="submit" class="clean" name="clean" value="clean">Restart</button>';
+}
 echo '</form>';
 
 ?>

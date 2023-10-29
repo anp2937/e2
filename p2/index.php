@@ -2,19 +2,12 @@
 
 session_start();
 
-
-// game reload
-$restart = '';
-if(!isset($_SESSION['restart'])) {
-    session_unset();
+// check win condition
+if (isset($_SESSION['win'][0])) {
+    $win = true;
+    $winner = $_SESSION['win'][1];
 } else {
-    $restart = $_SESSION['restart'];
-    $_SESSION['restart'] = null;
-}
-
-// set win condition to false by default
-if(!isset($_SESSION['win'])) {
-    $_SESSION['win'][0] = false;
+    $win = false;
 }
 
 // if this is new game - $board should be an empty array.
@@ -32,12 +25,14 @@ if(!isset($_SESSION['board'])) {
 // define who plays "X" or "O"
 if(!isset($_SESSION['player'])) {
     $player = "X";
-    $_SESSION['player'] = $player;
 } else {
     $player = $_SESSION['player'];
 }
 
-$_SESSION['board'] = $board;
+//reset SESSION data on page reload
+$_SESSION['board'] = null;
+$_SESSION['win'] = null;
+$_SESSION['player'] = null;
 
 
 require 'index-view.php';

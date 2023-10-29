@@ -19,16 +19,14 @@ const winningCombinations = [
 ];
 
 // get board
-$board = $_SESSION['board'];
+$board = json_decode(urldecode($_POST['board']), true);
 
 //get player
-$player = $_SESSION['player'];
+$player = $_POST['player'];
 
 // get coordinates
-$cell = $_GET['cell'];
+$cell = $_POST['cell'];
 
-//pass reload trigger back to index.php
-$restart = $_GET['restart'];
 
 list($row, $col) = explode('.', $cell);
 
@@ -55,7 +53,7 @@ foreach($board as $row) {
 // match new array against winning combinations
 
 foreach(winningCombinations as $combination) {
-    if($oneArray[$combination[0]] == $oneArray[$combination[1]] 
+    if($oneArray[$combination[0]] == $oneArray[$combination[1]]
     && $oneArray[$combination[1]] == $oneArray[$combination[2]]
     && $oneArray[$combination[0]] != ' ') {
         $_SESSION['win'] = [true, $player];
@@ -63,9 +61,9 @@ foreach(winningCombinations as $combination) {
 }
 
 
-echo ($row);
+echo($row);
+
 $_SESSION['board'] = $board;
-$_SESSION['restart'] = $restart;
 
 
 // clean all session data
