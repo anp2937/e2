@@ -82,34 +82,35 @@ if($win) {
     echo '</br>';
     echo '</br>';
 }
+?>
+<!-- Display game board -->
+<form method="POST" action="process.php">
+    <table>
+        <?php for ($i = 0; $i < 3; $i++): ?>
+            <tr>
+                <?php for ($j = 0; $j < 3; $j++): ?>
+                    <td>
+                        <button type="submit" name="cell" value="<?= $i . '.' . $j ?>" <?= $win ? 'disabled' : '' ?>>
+                            <?= $board[$i][$j] ?>
+                        </button>
+                    </td>
+                <?php endfor; ?>
+            </tr>
+        <?php endfor; ?>
+    </table>
 
-// Display game board
-echo '<form method="POST" action="process.php">';
-echo '<table>';
-for ($i = 0; $i < 3; $i++) {
-    echo '<tr>';
-    for ($j = 0; $j < 3; $j++) {
-        echo '<td><button type="submit" name="cell" value="' . $i .'.'. $j . '" ' .
-        ($win ? 'disabled' : '') .
-        '>' .
-        $board[$i][$j] .
-        '</button></td>';
-    }
-    echo '</tr>';
-}
-echo '</table>';
-// not sure why we cannot just pass json string  to url parameters without "urlencode" ?
-// however, without urlencode I always receive NULL when checking $POST['board']
-// finally I googled this solution and it works
-echo '<input type="hidden" name="board" value="'.urlencode(json_encode($board)).'">';
-echo '<input type="hidden" name="player" value="'.$player.'">';
-echo '</br>';
-echo '</br>';
-if($win) {
-    echo '<form method="POST" action="process.php">';
-    echo '<button type="submit" class="clean" name="clean" value="clean">Restart</button>';
-}
-echo '</form>';
+    <!-- Hidden input fields -->
+    <input type="hidden" name="board" value='<?= json_encode($board) ?>'>
+    <input type="hidden" name="player" value='<?= $player ?>'>
+
+    <br>
+    <br>
+
+    <!-- Restart button -->
+    <?php if ($win): ?>
+        <button type="submit" class="clean" name="clean" value="clean">Restart</button>
+    <?php endif; ?>
+</form>
 
 ?>
 </br>
