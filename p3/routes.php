@@ -8,4 +8,5 @@ return [
     '/history' => ['AppController', 'history'],
     '/details' => ['AppController', 'details'],
     '/move' => ['AppController', 'move'],
+    '/game' => ['AppController', 'game'],
 ];
