@@ -39,4 +39,4 @@ seed the data to *win_combination* table.
 ## Notes for instructor
 I noticed that public/css/app.css can't be read correctly by Safari browser. As a result - no styles work in Safari.
 I fixed this by creating a different file "ttt.css" with the same content (after noticing we did same thing in zipfoods project).
-Also the DB structure could be minimized to 1-3 tables, but I decided to create more table to keep specific data in a specificly named table.
+Also the DB structure could be minimized to 1-3 tables, but I decided to create more tables to keep specific data in a specifically named table.
