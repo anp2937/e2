@@ -41,7 +41,7 @@ button {
     height: 100%;
 }
 
-button.clean {
+.btn-primary {
     width: 20%;
     height: 5%;
 }

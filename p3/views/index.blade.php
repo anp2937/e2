@@ -1,18 +1,17 @@
 @extends('templates/master')
 
-
-
 @section('content')
-    {{--
     <div>
-        @include('message', [])
+        @include('errors/errors')
     </div>
---}}
     <div class="container">
         <div class="row">
             {{-- message --}}
             @if ($error)
-                <div class='alert alert-info'>{{ $error }}</div>
+                <div class='alert alert-danger'>{{ $error }}</div>
+            @endif
+            @if ($info)
+                <div class='alert alert-info'>{{ $info }}</div>
             @endif
 
             <div class="col-md-6">
@@ -39,14 +38,19 @@
                     <br>
                 @endif
 
-                <form method="POST" action="/game">
-                    <button class="clean" type="submit" name="game" value=1>Start New Game</button>
+                <form method="POST" action="/game" style="display:flex">
+                    <div class="d-flex flex-row">
+                        <label for="first" class="sr-only">Choose who's gonna start: (X or O)</label>
+                        <input type="text" class="form-control" name='first-move' id="first">
+                    </div>
+                    <button class="btn btn-primary" type="submit" name="game" value=1>Start New Game</button>
                 </form>
             </div>
 
             <div class="col-md-6">
                 <h2>Game Rules</h2>
-                <p class="border border-secondary">The game is played on a 3x3 grid
+                <p class="border border-secondary">The game is played on a 3x3 grid.
+                    Before starting, please choose a turn and click a button "Start new game". X or O to play first.
                     Players take turns marking an X or an O on the board.
                     The first player to get three of their marks in a row, horizontally, vertically, or diagonally, wins.
                     If both players use an optimal strategy, the game will always end in a draw. <br>

@@ -24,9 +24,10 @@ class AppController extends Controller
         $boardId = $this->app->sessionGet('board_id') ?: 1;
         $board = $this->app->db()->findById('board', $boardId);
         $error = $this->app->old('error');
+        $info = $this->app->old('info');
         $newGame = ($this->app->old('newGame') === null) ? true : false;
 
-        $wins = $this->checkWin();
+        $wins = $this->getWinCombinations();
 
 
         // compare each winning combination against current board
@@ -52,25 +53,27 @@ class AppController extends Controller
                 // check winner
                 if ($t >= 3) {
                     $newGame = true;
-                    $error = $turn." - WINs";
-                    // write results to the "history table"
-                    $this->app->db()->insert('history', $data);
-                }
-                // check draw
-                if (!in_array(null, $board, true)) {
-                    $newGame = true;
-                    $error = "Draw";
+                    $info = $turn." - WINs";
                     // write results to the "history table"
                     $this->app->db()->insert('history', $data);
                 }
                 $t = 0;
             }
+            // check draw
+            if (!in_array(null, $board, true)) {
+                $newGame = true;
+                $info = "Draw";
+                $data['winner'] = $info;
+                // write results to the "history table"
+                $this->app->db()->insert('history', $data);
+            }
         }
 
         return $this->app->view('index', [
             'board' => $board,
-            'error' => $error,
+            'info' => $info,
             'newGame' => $newGame,
+            'error' => $error,
         ]);
     }
 
@@ -118,6 +121,7 @@ class AppController extends Controller
     public function move()
     {
         $error = '';
+        $info = '';
         // get active board ID
         $boardId = $this->app->sessionGet('board_id') ?: 1;
         // get previous turn
@@ -160,12 +164,22 @@ class AppController extends Controller
         $rowId = $this->app->db()->insert('board', $board);
 
         // 2.create new round entry in table round
+        $this->app->validate([
+            'first-move' => 'alpha|maxLength:1'
+        ]);
+
+        $firstMove = $this->app->input('first-move');
+
+        if($firstMove !== "X" && $firstMove !== "x" && $firstMove !== "O" && $firstMove !== "o") {
+            $error = "Please enter X or O";
+            return $this->app->redirect('/', ['error' => $error]);
+        }
+
         $round = [
             'board_id' => $rowId,
-            'turn' => 'X',
+            'turn' => $firstMove,
         ];
         $this->app->db()->insert('round', $round);
-
 
 
         // 3. If new game started pass new rowID as a play board id to Session
@@ -174,7 +188,7 @@ class AppController extends Controller
         return $this->app->redirect('/', ['newGame' => false]);
     }
 
-    protected function checkWin()
+    protected function getWinCombinations()
     {
 
         // get winning combination as an array
