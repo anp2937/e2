@@ -41,7 +41,8 @@
                 <form method="POST" action="/game" style="display:flex">
                     <div class="d-flex flex-row">
                         <label for="first" class="sr-only">Choose who's gonna start: (X or O)</label>
-                        <input type="text" class="form-control" name='first-move' id="first">
+                        <input type="text" class="form-control" name='first-move' id="first"
+                            style="text-transform:uppercase">
                     </div>
                     <button class="btn btn-primary" type="submit" name="game" value=1>Start New Game</button>
                 </form>

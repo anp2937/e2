@@ -168,7 +168,7 @@ class AppController extends Controller
             'first-move' => 'alpha|maxLength:1'
         ]);
 
-        $firstMove = $this->app->input('first-move');
+        $firstMove = strtoupper($this->app->input('first-move'));
 
         if($firstMove !== "X" && $firstMove !== "x" && $firstMove !== "O" && $firstMove !== "o") {
             $error = "Please enter X or O";
