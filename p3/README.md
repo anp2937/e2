@@ -18,10 +18,11 @@ I re-used some logic from P2 project but mostly it is a new code since I had to 
   - history
   - win_combinations
 + Seed *win_combination* table with winning combination prepared in json file.
-+ To start the game - it requires you to enter X or O.It will have a e2framework validation
++ Validate user input for the first move. Use a e2framework validation.
 + Implement a custom validation for this input field to limit the input options to X or O
 + Create a new record in tables *board* and *round* after Start button hit
-+ Write to the *board* table information every time when user cick on board
++ Store current boardId to Session to now if this is the same game or a new one
++ Write to the *board* table information every time when user cick on board, using ID stored in session.
 + Check current board state after each move and compare it to the wining combination 
 + When the game is over - create a record in *history* table.
 + Implement error handling.
