@@ -8,10 +8,10 @@
         <div class="row">
             {{-- message --}}
             @if ($error)
-                <div class='alert alert-danger'>{{ $error }}</div>
+                <div test='error' class='alert alert-danger'>{{ $error }}</div>
             @endif
             @if ($info)
-                <div class='alert alert-info'>{{ $info }}</div>
+                <div test='info' class='alert alert-info'>{{ $info }}</div>
             @endif
 
             <div class="col-md-6">
@@ -19,13 +19,13 @@
                 {{-- Display game board --}}
                 @if (!$newGame)
                     <form method="POST" action="/move">
-                        <table>
+                        <table name="board">
                             @for ($i = 1; $i < 4; $i++)
                                 <tr>
                                     @for ($j = 1; $j < 4; $j++)
                                         <td>
-                                            <button type="submit" name="cell" value="{{ $i . '_' . $j }}"
-                                                {{ $newGame ? 'disabled' : '' }}>
+                                            <button class="{{ $i . '_' . $j }}" type="submit" name="cell"
+                                                value="{{ $i . '_' . $j }}" {{ $newGame ? 'disabled' : '' }}>
                                                 {{ $board['cell' . $i . '_' . $j] }}
                                             </button>
                                         </td>

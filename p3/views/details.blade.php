@@ -13,7 +13,8 @@
                 <tr>
                     @for ($j = 1; $j < 4; $j++)
                         <td>
-                            <button type="submit" name="cell" value="{{ $i . '_' . $j }}" disabled>
+                            <button class="{{ $i . '_' . $j }}" type="submit" name="cell" value="{{ $i . '_' . $j }}"
+                                disabled>
                                 {{ $board['cell' . $i . '_' . $j] }}
                             </button>
                         </td>
