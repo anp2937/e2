@@ -18,7 +18,7 @@
 
 <body>
     <header>
-        <a href='/'><img id='logo' src='/images/hes-logo.png' alt='Logo'></a>
+        <a href='/'><img id='logo' src='/images/ttt2.png' alt='Logo'></a>
 
         <h1>{{ $app->config('app.name') }}</h1>
     </header>

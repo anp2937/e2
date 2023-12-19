@@ -4,31 +4,18 @@ namespace App\Controllers;
 
 class AppController extends Controller
 {
-    private $history = [];
-
-    public function fetchHistory()
-    {
-        if (empty($this->history)) {
-            // Fetch all records from the history table if the history variable is empty
-            $this->history = $this->app->db()->all('history');
-        }
-    }
-
     /**
      * This method is triggered by the route "/"
      */
 
     public function index()
     {
-
-        $boardId = $this->app->sessionGet('board_id') ?: 1;
+        $boardId = $this->app->sessionGet('board_id');
         $board = $this->app->db()->findById('board', $boardId);
         $error = $this->app->old('error');
         $info = $this->app->old('info');
         $newGame = ($this->app->old('newGame') === null) ? true : false;
-
         $wins = $this->getWinCombinations();
-
 
         // compare each winning combination against current board
         // check previous turn to know what player did a move.
@@ -37,13 +24,16 @@ class AppController extends Controller
             $turn = $this->app->db()->findByColumn('round', 'board_id', '=', $boardId);
             $turn = ($turn[0]['turn'] == "X") ? "O" : "X";
 
-            $t = 0;
             $date = date('Y-m-d H:i:s');
+
             $data = [
                 'board_id' => $boardId,
                 'date' => $date,
                 'winner' => $turn
             ];
+
+            // set counter
+            $t = 0;
             foreach ($wins as $win) {
                 foreach($win as $key => $value) {
                     if ($board[$key] == $turn) {
@@ -51,12 +41,14 @@ class AppController extends Controller
                     }
                 }
                 // check winner
+                // if all 3 cells contained any of (X or O) - it is a win
                 if ($t >= 3) {
                     $newGame = true;
                     $info = $turn." - WINs";
                     // write results to the "history table"
                     $this->app->db()->insert('history', $data);
                 }
+                // reset counter
                 $t = 0;
             }
             // check draw
@@ -80,12 +72,10 @@ class AppController extends Controller
 
     public function history()
     {
-
-        $this->fetchHistory();
+        $history = $this->app->db()->all('history');
 
         return $this->app->view('history', [
-            'email' => 'test@test.com',
-            'history' => $this->history,
+            'history' => $history,
         ]);
     }
 
@@ -121,9 +111,8 @@ class AppController extends Controller
     public function move()
     {
         $error = '';
-        $info = '';
         // get active board ID
-        $boardId = $this->app->sessionGet('board_id') ?: 1;
+        $boardId = $this->app->sessionGet('board_id');
         // get previous turn
         $turn = $this->app->db()->findByColumn('round', 'board_id', '=', $boardId);
         $turn = $turn[0]['turn'];
@@ -135,7 +124,7 @@ class AppController extends Controller
         if(!$row[$cell]) {
             $this->app->db()->run("UPDATE board SET `{$cell}` = '{$turn}' WHERE id = {$boardId}");
         } else {
-            $error = 'this cell is not empty';
+            $error = "This cell is not empty";
         }
 
         //switch turn
@@ -181,7 +170,6 @@ class AppController extends Controller
         ];
         $this->app->db()->insert('round', $round);
 
-
         // 3. If new game started pass new rowID as a play board id to Session
         $this->app->sessionSet("board_id", $rowId);
 
@@ -207,7 +195,5 @@ class AppController extends Controller
             $wins[] = $combinationOnly;
         }
         return $wins;
-
     }
-
 }

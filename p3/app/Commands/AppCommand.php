@@ -58,10 +58,9 @@ class AppCommand extends Command
         $wins = json_decode($wins, true);
 
         foreach ($wins as $win) {
-
-            # Insert win combination
+            // Insert win combination
             $this->app->db()->insert('win_combinations', $win);
         }
-        dump('wining combinations table has been seeded');
+        dump('winning combinations table has been seeded');
     }
 }
